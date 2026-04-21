@@ -133,20 +133,20 @@
                     String sectionInput = sectionField.getText().trim();
 
                     if (name.isEmpty() || sectionInput.isEmpty()) {
-                        output.setText("Status: Fill all fields!");
+                        showError(frame, "Fill all fields!");
                         return;
                     }
 
                     Section section = system.findSection(sectionInput);
 
                     if (section == null) {
-                        output.setText("Status: Section not found!");
+                        showError(frame, "Section not found!");
                         return;
                     }
 
                     String validationError = system.validateEnrollment(name, section);
                     if (validationError != null) {
-                        output.setText("Status: " + validationError);
+                        showError(frame, validationError);
                         return;
                     }
 
@@ -158,7 +158,7 @@
                         output.setText("Status: Enrolled " + name);
                         studentListModel.addElement(student.getStudentId() + " - " + student.getStudentName() + " (" + student.getStudentSection() + ")");
                     } else {
-                        output.setText("Status: " + status);
+                        showError(frame, status);
                     }
                 });
 
@@ -230,5 +230,14 @@
                     new LineBorder(new Color(0x244FAE), 1, true),
                     new EmptyBorder(8, 14, 8, 14)
             ));
+        }
+
+        private static void showError(Component parent, String message) {
+            JOptionPane.showMessageDialog(
+                    parent,
+                    message,
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
