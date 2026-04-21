@@ -14,6 +14,24 @@ public void addStudent(Student student){
 public void addSection(Section section){
     sections.add(section); 
 }
+
+public String validateEnrollment(String studentName, Section section){
+    if(section.isFull()){
+        return "This section is already full!";
+    }
+
+    for(int i = 0; i < enrollments.size(); i++){
+        Enrollment e = enrollments.get(i);
+        if(e.getStudent().getStudentName().equals(studentName)){
+            if(e.getSection().getSectionName().equals(section.getSectionName())
+                    || e.getSection().getSchedule().equals(section.getSchedule())){
+                return "Student/s cannot have duplicate or overlapped schedule.";
+            }
+        }
+    }
+
+    return null; // ok
+}
 public String tryEnrollStudent(Student student, Section section){
     if(section.isFull()){
         return "This section is already full!";
