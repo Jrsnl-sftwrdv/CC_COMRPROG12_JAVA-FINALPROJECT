@@ -109,9 +109,13 @@
                 JButton enrollButton = new JButton("Enroll");
                 stylePrimaryButton(enrollButton);
 
+                JButton removeButton = new JButton("Remove");
+                stylePrimaryButton(removeButton);
+
                 JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
                 buttonRow.setOpaque(false);
                 buttonRow.add(enrollButton);
+                buttonRow.add(removeButton);
                 bottom.add(buttonRow, BorderLayout.NORTH);
 
                 JLabel output = new JLabel("Status: ");
@@ -159,6 +163,33 @@
                         studentListModel.addElement(student.getStudentId() + " - " + student.getStudentName() + " (" + student.getStudentSection() + ")");
                     } else {
                         showError(frame, status);
+                    }
+                });
+
+                removeButton.addActionListener(e -> {
+                    String name = nameField.getText().trim();
+                    String sectionInput = sectionField.getText().trim();
+
+                    if (name.isEmpty() || sectionInput.isEmpty()) {
+                        showError(frame, "Fill all fields!");
+                        return;
+                    }
+
+                    Section section = system.findSection(sectionInput);
+
+                    if (section == null) {
+                        showError(frame, "Section not found!");
+                        return;
+                    }
+
+                    Student student = system.getStudent(name, section.getSectionName());
+
+                    if (student != null) {
+                        system.removeStudent(student);
+                        studentListModel.removeElement(student.getStudentId() + " - " + student.getStudentName() + " (" + student.getStudentSection() + ")");
+                        output.setText("Status: Removed " + name);
+                    } else {
+                        showError(frame, "Student not found!");
                     }
                 });
 

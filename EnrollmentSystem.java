@@ -15,6 +15,21 @@ public void addSection(Section section){
     sections.add(section); 
 }
 
+public Student getStudent(String name, String section) {
+    for (int i = 0; i < students.size(); i++) {
+        Student studentObj = students.get(i);
+        if (studentObj.getStudentName().toLowerCase().equals(name.toLowerCase()) && section.equals(studentObj.getStudentSection())) { 
+            return studentObj;
+        }
+    }
+    
+    return null;
+}
+
+public void removeStudent(Student student) {
+    students.remove(student);
+}
+
 public String validateEnrollment(String studentName, Section section){
     if(section.isFull()){
         return "This section is already full!";
@@ -30,7 +45,7 @@ public String validateEnrollment(String studentName, Section section){
         }
     }
 
-    return null; // ok
+    return null;
 }
 public String tryEnrollStudent(Student student, Section section){
     if(section.isFull()){
