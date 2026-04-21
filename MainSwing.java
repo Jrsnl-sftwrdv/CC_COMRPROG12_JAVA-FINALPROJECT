@@ -15,7 +15,7 @@
                 // sample data
                 Section sec1 = new Section(101, "1A", "Programming 1", "MON 9-11", 2);
                 system.addSection(sec1);
-                
+
                 JFrame frame = new JFrame("Enrollment System");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -63,7 +63,7 @@
                 gbc.gridx = 1;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
-
+                
                 JTextField sectionField = new JTextField();
                 styleTextField(sectionField);
                 form.add(sectionField, gbc);
