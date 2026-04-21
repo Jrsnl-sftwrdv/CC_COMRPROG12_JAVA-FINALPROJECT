@@ -14,7 +14,11 @@
 
                 // sample data
                 Section sec1 = new Section(101, "1A", "Programming 1", "MON 9-11", 2);
+                Section sec2 = new Section(102, "1B", "Programming 1", "MON 10-12", 2); 
+                Section sec3 = new Section(103, "1C", "HIST 1", "TUE 9-12", 2);
                 system.addSection(sec1);
+                system.addSection(sec2);
+                system.addSection(sec3);
 
                 JFrame frame = new JFrame("Enrollment System");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -27,6 +31,31 @@
                 title.setFont(new Font("Segoe UI", Font.BOLD, 20));
                 title.setForeground(new Color(0xE8E8E8));
                 root.add(title, BorderLayout.NORTH);
+
+                DefaultListModel<String> studentListModel = new DefaultListModel<>();
+                JList<String> studentList = new JList<>(studentListModel);
+                studentList.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+                studentList.setForeground(new Color(0xE6E6E6));
+                studentList.setBackground(new Color(0x0E1320));
+                studentList.setSelectionBackground(new Color(0x24304A));
+                studentList.setSelectionForeground(new Color(0xFFFFFF));
+                studentList.setBorder(new EmptyBorder(8, 10, 8, 10));
+
+                JScrollPane studentScroll = new JScrollPane(studentList);
+                studentScroll.setBorder(new CompoundBorder(
+                        new LineBorder(new Color(0x2A3142), 1, true),
+                        new EmptyBorder(0, 0, 0, 0)
+                ));
+                studentScroll.getViewport().setBackground(new Color(0x0E1320));
+
+                JPanel rightPanel = new JPanel(new BorderLayout(0, 10));
+                rightPanel.setOpaque(false);
+
+                JLabel listTitle = new JLabel("Students");
+                listTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                listTitle.setForeground(new Color(0xE8E8E8));
+                rightPanel.add(listTitle, BorderLayout.NORTH);
+                rightPanel.add(studentScroll, BorderLayout.CENTER);
 
                 JPanel form = new JPanel(new GridBagLayout());
                 form.setOpaque(false);
@@ -63,12 +92,16 @@
                 gbc.gridx = 1;
                 gbc.weightx = 1.0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
-                
+
                 JTextField sectionField = new JTextField();
                 styleTextField(sectionField);
                 form.add(sectionField, gbc);
 
-                root.add(form, BorderLayout.CENTER);
+                JPanel center = new JPanel(new GridLayout(1, 2, 14, 0));
+                center.setOpaque(false);
+                center.add(form);
+                center.add(rightPanel);
+                root.add(center, BorderLayout.CENTER);
 
                 JPanel bottom = new JPanel(new BorderLayout(0, 10));
                 bottom.setOpaque(false);
@@ -111,19 +144,28 @@
                         return;
                     }
 
+                    String validationError = system.validateEnrollment(name, section);
+                    if (validationError != null) {
+                        output.setText("Status: " + validationError);
+                        return;
+                    }
+
                     Student student = new Student(name, system.getNextId(), sectionInput);
                     system.addStudent(student);
                     String status = system.tryEnrollStudent(student, section);
 
                     if ("Enrollment successful!".equals(status)) {
                         output.setText("Status: Enrolled " + name);
+                        studentListModel.addElement(student.getStudentId() + " - " + student.getStudentName() + " (" + student.getStudentSection() + ")");
                     } else {
                         output.setText("Status: " + status);
                     }
                 });
 
                 frame.setContentPane(root);
-                frame.setMinimumSize(new Dimension(620, 360)); // widened + a bit taller
+                // "16x24" style (24:16 ratio), bigger than before
+                frame.setMinimumSize(new Dimension(960, 640));
+                frame.setPreferredSize(new Dimension(960, 640));
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
