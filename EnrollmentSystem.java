@@ -14,25 +14,19 @@ public void addStudent(Student student){
 public void addSection(Section section){
     sections.add(section); 
 }
-public void enrollStudent(Student student, Section section){
-
-
+public String tryEnrollStudent(Student student, Section section){
     if(section.isFull()){
-        System.out.println("This section is already full!");
-        return;    
+        return "This section is already full!";
     }
 
-    if(isConflict(student, section)){
-        return; 
-    }
-    if(isDuplicate(student, section)){
-        return; 
+    if(isConflict(student, section) || isDuplicate(student, section)){
+        return "Student/s cannot have duplicate or overlapped schedule.";
     }
 
-    enrollments.add(new Enrollment(student, section)); 
+    enrollments.add(new Enrollment(student, section));
     section.plusEnrolled();
 
-    System.out.println("Enrollment successful!");
+    return "Enrollment successful!";
 /* 
 
    for (int i = 0; i < enrollments.size(); i++) {
@@ -58,6 +52,10 @@ public void enrollStudent(Student student, Section section){
 }
     */ 
 }
+
+public void enrollStudent(Student student, Section section){
+    System.out.println(tryEnrollStudent(student, section));
+}
 public void displayEnrollments() {
     for (Enrollment e : enrollments) {
         System.out.println(e);
@@ -70,7 +68,6 @@ private boolean isDuplicate(Student student, Section section){
     for(int i = 0; i < enrollments.size(); i++){ 
         Enrollment e = enrollments.get(i); 
         if (e.getStudent().getStudentName().equals(student.getStudentName()) && e.getSection().getSectionName().equals(section.getSectionName())) {
-            System.out.println("Duplication detected");
             return true; 
         }
     }
@@ -83,8 +80,6 @@ private boolean isConflict(Student student, Section section){
     for(int i = 0; i < enrollments.size(); i++){
         Enrollment e = enrollments.get(i); 
         if(e.getStudent().getStudentName().equals(student.getStudentName()) && e.getSection().getSchedule().equals(section.getSchedule())){
-
-            System.out.println("Schedule cannot overlap!");
             return true; 
         }
 
